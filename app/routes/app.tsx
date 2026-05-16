@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { authenticate } from '~/shopify.server';
-import { Provider as AppProvider } from '@shopify/app-bridge-react';
+import { AppProvider } from '@shopify/app-bridge-react';
 import { NavigationMenu } from '~/components/NavigationMenu';
 import { Page, Frame } from '@shopify/polaris';
 
