@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npx prisma generate && npm run build"
+buildCommand = "DATABASE_URL=postgresql://localhost:5432/gtm_tracking npx prisma generate && npm run build"
 
 [deploy]
 startCommand = "npx prisma migrate deploy && npm start"
