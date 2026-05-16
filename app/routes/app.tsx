@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import { authenticate } from '~/shopify.server';
-import { AppProvider } from '@shopify/app-bridge-react';
 import { NavigationMenu } from '~/components/NavigationMenu';
 import { Page, Frame } from '@shopify/polaris';
 
@@ -18,17 +17,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function AppLayout() {
   const { apiKey, host, shop } = useLoaderData<typeof loader>();
 
-  const config = {
-    apiKey,
-    host,
-    forceRedirect: true,
-  };
-
   return (
-    <AppProvider config={config}>
-      <Frame navigation={<NavigationMenu />}>
-        <Outlet context={{ apiKey, shop, host }} />
-      </Frame>
-    </AppProvider>
+    <Frame navigation={<NavigationMenu />}>
+      <Outlet context={{ apiKey, shop, host }} />
+    </Frame>
   );
 }
