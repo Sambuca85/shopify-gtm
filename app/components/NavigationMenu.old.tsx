@@ -3,6 +3,7 @@ import { Navigation } from '@shopify/polaris';
 import {
   HomeIcon,
   SettingsIcon,
+  ReportsIcon,
   BugIcon,
   CodeIcon,
 } from '@shopify/polaris-icons';
@@ -31,7 +32,7 @@ export function NavigationMenu() {
           {
             url: '/app/events',
             label: 'Eventi',
-            icon: HomeIcon,
+            icon: ReportsIcon,
             selected: isActive('/app/events'),
             onClick: () => navigate('/app/events'),
           },
