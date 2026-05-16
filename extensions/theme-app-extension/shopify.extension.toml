@@ -1,0 +1,87 @@
+api_version = "2024-01"
+
+[[extensions]]
+type = "theme"
+name = "GTM Advanced Tracking"
+handle = "gtm-advanced-tracking"
+
+[[extensions.settings]]
+type = "paragraph"
+content = "Configura Google Tag Manager e il tracking ecommerce avanzato"
+
+[[extensions.settings]]
+type = "header"
+content = "Configurazione GTM"
+
+[[extensions.settings]]
+type = "text"
+id = "gtm_container_id"
+label = "GTM Container ID"
+info = "Inserisci il tuo Google Tag Manager Container ID (es. GTM-XXXXXX)"
+default = ""
+
+[[extensions.settings]]
+type = "text"
+id = "gtm_auth"
+label = "GTM Auth (opzionale)"
+info = "Per ambienti di preview/testing"
+default = ""
+
+[[extensions.settings]]
+type = "text"
+id = "gtm_preview"
+label = "GTM Preview (opzionale)"
+default = ""
+
+[[extensions.settings]]
+type = "header"
+content = "Impostazioni Tracking"
+
+[[extensions.settings]]
+type = "checkbox"
+id = "enabled"
+label = "Attiva tracking"
+default = true
+
+[[extensions.settings]]
+type = "checkbox"
+id = "debug_mode"
+label = "Debug mode"
+info = "Abilita il logging dettagliato"
+default = false
+
+[[extensions.settings]]
+type = "checkbox"
+id = "consent_mode"
+label = "GDPR Consent Mode"
+info = "Rispetta il consenso utente prima di tracciare"
+default = true
+
+[[extensions.settings]]
+type = "header"
+content = "Pixels"
+
+[[extensions.settings]]
+type = "text"
+id = "ga4_measurement_id"
+label = "GA4 Measurement ID"
+info = "es. G-XXXXXXXXXX"
+default = ""
+
+[[extensions.settings]]
+type = "text"
+id = "meta_pixel_id"
+label = "Meta Pixel ID"
+default = ""
+
+[[extensions.settings]]
+type = "text"
+id = "tiktok_pixel_id"
+label = "TikTok Pixel ID"
+default = ""
+
+[[extensions.settings]]
+type = "text"
+id = "pinterest_tag_id"
+label = "Pinterest Tag ID"
+default = ""

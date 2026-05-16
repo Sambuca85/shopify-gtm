@@ -1,0 +1,283 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id          String    @id
+  shop        String
+  state       String
+  isOnline    Boolean   @default(false)
+  scope       String?
+  expires     DateTime?
+  accessToken String
+  userId      BigInt?
+  firstName   String?
+  lastName    String?
+  email       String?
+  accountOwner Boolean  @default(false)
+  locale      String?
+  collaborator Boolean  @default(false)
+  emailVerified Boolean @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([shop])
+  @@index([expires])
+}
+
+model Shop {
+  id            String    @id @default(cuid())
+  shopifyDomain String    @unique
+  name          String
+  email         String
+  plan          String    @default("basic")
+  currency      String    @default("USD")
+  timezone      String    @default("UTC")
+  country       String    @default("US")
+  installedAt   DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  uninstalledAt DateTime?
+  isActive      Boolean   @default(true)
+  
+  // Relations
+  settings      ShopSettings?
+  events        TrackingEvent[]
+  debugLogs     DebugLog[]
+  webhookLogs   WebhookLog[]
+  consentLogs   ConsentLog[]
+  
+  @@index([shopifyDomain])
+  @@index([isActive])
+  @@index([installedAt])
+}
+
+model ShopSettings {
+  id                   String   @id @default(cuid())
+  shopId               String   @unique
+  shop                 Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  // GTM Configuration
+  gtmContainerId       String?
+  gtmAuth              String?
+  gtmPreview           String?
+  
+  // Feature Flags
+  enabled              Boolean  @default(true)
+  debugMode            Boolean  @default(false)
+  consentMode          Boolean  @default(true)
+  serverSideTracking   Boolean  @default(false)
+  
+  // Event Settings (JSON for flexibility)
+  eventsConfig         Json     @default("{\"pageView\":true,\"productView\":true,\"collectionView\":true,\"addToCart\":true,\"removeFromCart\":true,\"cartView\":true,\"beginCheckout\":true,\"addShippingInfo\":true,\"addPaymentInfo\":true,\"purchase\":true,\"refund\":true,\"search\":true,\"login\":true,\"signUp\":true,\"generateLead\":true,\"addToWishlist\":true,\"share\":true,\"customizeProduct\":true,\"selectItem\":true,\"selectPromotion\":true,\"viewPromotion\":true}")
+  
+  // Pixel Settings
+  pixelConfig          Json     @default("{\"ga4\":true,\"meta\":false,\"tiktok\":false,\"pinterest\":false,\"snapchat\":false,\"twitter\":false,\"linkedin\":false}")
+  
+  // Consent Settings
+  consentConfig        Json     @default("{\"defaultConsent\":\"denied\",\"gdprEnabled\":true,\"ccpaEnabled\":true,\"waitForUpdate\":500,\"regions\":[],\"adsDataRedaction\":true,\"urlPassthrough\":true}")
+  
+  // Data Layer Configuration
+  dataLayerConfig      Json     @default("{\"prefix\":\"\",\"customDimensions\":{},\"userProperties\":[],\"enhancedEcommerce\":true,\"sendToGA4\":true,\"sendToUA\":false}")
+  
+  // Pixel IDs
+  ga4MeasurementId     String?
+  metaPixelId          String?
+  tiktokPixelId        String?
+  pinterestTagId       String?
+  snapchatPixelId      String?
+  
+  // Server-Side Tracking
+  serverSideConfig     Json?
+  webhookSecret        String?
+  
+  // Meta CAPI
+  metaAccessToken      String?
+  metaTestEventCode    String?
+  
+  // TikTok Events API
+  tiktokAccessToken    String?
+  tiktokTestEventCode  String?
+  
+  // Timestamps
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  @@index([shopId])
+}
+
+model TrackingEvent {
+  id              String    @id @default(cuid())
+  shopId          String
+  shop            Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  eventName       String
+  eventType       EventType @default(WEB)
+  payload         Json
+  
+  status          EventStatus @default(PENDING)
+  attempts        Int       @default(0)
+  errorMessage    String?
+  
+  createdAt       DateTime  @default(now())
+  sentAt          DateTime?
+  
+  // Client Info
+  clientId        String?
+  sessionId       String?
+  userId          String?
+  ipAddress       String?
+  userAgent       String?
+  
+  @@index([shopId])
+  @@index([eventName])
+  @@index([status])
+  @@index([createdAt])
+  @@index([clientId])
+}
+
+model DebugLog {
+  id              String    @id @default(cuid())
+  shopId          String
+  shop            Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  eventName       String
+  dataLayerPayload Json
+  
+  timestamp       DateTime  @default(now())
+  status          DebugStatus @default(SUCCESS)
+  message         String?
+  stackTrace      String?
+  
+  // Client Info
+  clientInfo      Json?
+  
+  @@index([shopId])
+  @@index([timestamp])
+  @@index([status])
+}
+
+model WebhookLog {
+  id              String    @id @default(cuid())
+  shopId          String
+  shop            Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  topic           String
+  payload         Json
+  
+  processedAt     DateTime  @default(now())
+  status          WebhookStatus @default(PENDING)
+  errorMessage    String?
+  
+  @@index([shopId])
+  @@index([topic])
+  @@index([processedAt])
+  @@index([status])
+}
+
+model ConsentLog {
+  id              String    @id @default(cuid())
+  shopId          String
+  shop            Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  customerId      String?
+  consent         Json      // { analytics: boolean, marketing: boolean, preferences: boolean, saleOfData: boolean }
+  
+  timestamp       DateTime  @default(now())
+  source          ConsentSource @default(WEB)
+  region          String?
+  
+  @@index([shopId])
+  @@index([customerId])
+  @@index([timestamp])
+}
+
+model ServerSideEvent {
+  id              String    @id @default(cuid())
+  shopId          String
+  
+  platform        String    // ga4, meta, tiktok, etc.
+  eventName       String
+  payload         Json
+  
+  status          EventStatus @default(PENDING)
+  attempts        Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  sentAt          DateTime?
+  
+  response        Json?
+  errorMessage    String?
+  
+  @@index([shopId])
+  @@index([platform])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model EventQueue {
+  id              String    @id @default(cuid())
+  shopId          String
+  
+  eventName       String
+  payload         Json
+  priority        Int       @default(5)
+  
+  scheduledFor    DateTime  @default(now())
+  attempts        Int       @default(0)
+  maxAttempts     Int       @default(3)
+  
+  status          QueueStatus @default(PENDING)
+  createdAt       DateTime  @default(now())
+  processedAt     DateTime?
+  
+  errorMessage    String?
+  
+  @@index([shopId])
+  @@index([status])
+  @@index([scheduledFor])
+}
+
+enum EventType {
+  WEB
+  SERVER
+  PIXEL
+  API
+}
+
+enum EventStatus {
+  PENDING
+  SENT
+  FAILED
+  RETRY
+}
+
+enum DebugStatus {
+  SUCCESS
+  ERROR
+  WARNING
+}
+
+enum WebhookStatus {
+  PENDING
+  SUCCESS
+  ERROR
+}
+
+enum ConsentSource {
+  WEB
+  API
+  ADMIN
+}
+
+enum QueueStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}

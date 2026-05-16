@@ -1,0 +1,30 @@
+{
+  "include": [
+    "env.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "extensions/**/*.ts",
+    "shopify.d.ts"
+  ],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "strict": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["app/*"],
+      "@/*": ["app/*"],
+      "@prisma/*": ["prisma/*"],
+      "@extensions/*": ["extensions/*"]
+    }
+  }
+}

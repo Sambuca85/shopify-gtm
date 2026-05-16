@@ -1,0 +1,200 @@
+{% comment %}
+  GTM Advanced Tracking - Head Script
+  Inserire nel tag <head> del tema
+{% endcomment %}
+
+{% if block.settings.enabled and block.settings.gtm_container_id != blank %}
+  <!-- Google Tag Manager - GTM Advanced Tracking App -->
+  <script>
+    // Initialize dataLayer
+    window.dataLayer = window.dataLayer || [];
+    
+    // GTM Configuration
+    window.gtmTrackingConfig = {
+      containerId: '{{ block.settings.gtm_container_id | escape }}',
+      enabled: {{ block.settings.enabled | json }},
+      debugMode: {{ block.settings.debug_mode | json }},
+      consentMode: {{ block.settings.consent_mode | json }},
+      shopDomain: '{{ shop.domain | escape }}',
+      shopCurrency: '{{ shop.currency | escape }}',
+      shopName: '{{ shop.name | escape }}',
+      customerId: '{{ customer.id | json }}',
+      customerEmail: '{{ customer.email | escape }}',
+      ga4MeasurementId: '{{ block.settings.ga4_measurement_id | escape }}',
+      metaPixelId: '{{ block.settings.meta_pixel_id | escape }}',
+      tiktokPixelId: '{{ block.settings.tiktok_pixel_id | escape }}',
+      pinterestTagId: '{{ block.settings.pinterest_tag_id | escape }}'
+    };
+
+    {% if block.settings.consent_mode %}
+    // Consent Mode initialization
+    window.dataLayer.push({
+      event: 'gtm.init_consent',
+      consent: 'denied',
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500
+    });
+    {% endif %}
+
+    // Push initial configuration
+    window.dataLayer.push({
+      event: 'gtm.config',
+      shopDomain: '{{ shop.domain | escape }}',
+      currency: '{{ shop.currency | escape }}',
+      timestamp: new Date().toISOString(),
+      pageType: {{ request.page_type | json }}
+    });
+
+    {% if block.settings.debug_mode %}
+    console.log('[GTM Tracking] Initialized with config:', window.gtmTrackingConfig);
+    {% endif %}
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),
+          dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl{% if block.settings.gtm_auth != blank %}+'&gtm_auth={{ block.settings.gtm_auth | escape }}'{% endif %}{% if block.settings.gtm_preview != blank %}+'&gtm_preview={{ block.settings.gtm_preview | escape }}'{% endif %};
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ block.settings.gtm_container_id | escape }}');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  {% if block.settings.ga4_measurement_id != blank %}
+  <!-- Google Analytics 4 - gtag.js -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ block.settings.ga4_measurement_id | escape }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ block.settings.ga4_measurement_id | escape }}', {
+      send_page_view: false,
+      cookie_flags: 'SameSite=None;Secure'
+    });
+  </script>
+  {% endif %}
+
+  {% if block.settings.meta_pixel_id != blank %}
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){
+      if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '{{ block.settings.meta_pixel_id | escape }}');
+    fbq('track', 'PageView');
+  </script>
+  {% endif %}
+
+  {% if block.settings.tiktok_pixel_id != blank %}
+  <!-- TikTok Pixel -->
+  <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+      ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],
+      ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+      for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+      ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},
+      ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+      ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};
+      var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;
+      var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+      ttq.load('{{ block.settings.tiktok_pixel_id | escape }}');
+      ttq.page();
+    }(window, document, 'ttq');
+  </script>
+  {% endif %}
+
+  {% if block.settings.pinterest_tag_id != blank %}
+  <!-- Pinterest Tag -->
+  <script>
+    !function(e){if(!window.pintrk){window.pintrk = function () {
+    window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+      n=window.pintrk;n.queue=[],n.version="3.0";var
+      t=document.createElement("script");t.async=!0,t.src=e;var
+      r=document.getElementsByTagName("script")[0];
+      r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+    pintrk('load', '{{ block.settings.pinterest_tag_id | escape }}');
+    pintrk('page');
+  </script>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "GTM Head Script",
+  "target": "head",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configurazione GTM"
+    },
+    {
+      "type": "text",
+      "id": "gtm_container_id",
+      "label": "GTM Container ID",
+      "info": "es. GTM-XXXXXX",
+      "default": ""
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Attiva tracking",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "debug_mode",
+      "label": "Debug mode",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "consent_mode",
+      "label": "GDPR Consent Mode",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Pixels"
+    },
+    {
+      "type": "text",
+      "id": "ga4_measurement_id",
+      "label": "GA4 Measurement ID",
+      "info": "es. G-XXXXXXXXXX",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "meta_pixel_id",
+      "label": "Meta Pixel ID",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "tiktok_pixel_id",
+      "label": "TikTok Pixel ID",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "pinterest_tag_id",
+      "label": "Pinterest Tag ID",
+      "default": ""
+    }
+  ]
+}
+{% endschema %}

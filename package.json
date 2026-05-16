@@ -1,0 +1,70 @@
+{
+  "name": "gtm-tracking-app",
+  "version": "1.0.0",
+  "description": "Professional Shopify SaaS for advanced ecommerce tracking with Google Tag Manager",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "remix build",
+    "dev": "shopify app dev",
+    "config:link": "shopify app config link",
+    "config:push": "shopify app config push",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy",
+    "env:pull": "shopify app env pull",
+    "setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "start": "remix-serve build/index.js",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "shopify:generate:extension": "shopify app generate extension",
+    "shopify:deploy": "shopify app deploy",
+    "shopify:logs": "shopify app logs",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.0",
+    "@remix-run/node": "^2.8.0",
+    "@remix-run/react": "^2.8.0",
+    "@remix-run/serve": "^2.8.0",
+    "@shopify/app-bridge-react": "^4.0.0",
+    "@shopify/polaris": "^12.0.0",
+    "@shopify/polaris-icons": "^8.0.0",
+    "@shopify/shopify-api": "^9.0.0",
+    "@shopify/shopify-app-remix": "^2.5.0",
+    "@shopify/shopify-app-session-storage-prisma": "^4.0.0",
+    "crypto-js": "^4.2.0",
+    "isbot": "^5.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ua-parser-js": "^1.0.37",
+    "uuid": "^9.0.0",
+    "zod": "^3.22.0",
+    "date-fns": "^3.3.0",
+    "lodash.debounce": "^4.0.8"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.8.0",
+    "@remix-run/eslint-config": "^2.8.0",
+    "@shopify/cli": "^3.59.0",
+    "@types/crypto-js": "^4.2.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/ua-parser-js": "^0.7.39",
+    "@types/uuid": "^9.0.0",
+    "@types/lodash.debounce": "^4.0.9",
+    "eslint": "^8.56.0",
+    "prisma": "^5.10.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

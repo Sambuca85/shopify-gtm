@@ -1,0 +1,26 @@
+api_version = "2024-01"
+capabilities = [
+  "customer_privacy",
+  "network",
+]
+
+[[extensions]]
+type = "web_pixel"
+name = "GTM Web Pixel"
+handle = "gtm-web-pixel"
+
+[extensions.settings]
+type = "object"
+required = ["gtm_container_id"]
+
+[[extensions.settings.fields]]
+type = "single_line_text_field"
+key = "gtm_container_id"
+name = "GTM Container ID"
+description = "The Google Tag Manager Container ID"
+
+[[extensions.settings.fields]]
+type = "single_line_text_field"
+key = "endpoint_url"
+name = "Endpoint URL"
+description = "The URL to send tracking events to"

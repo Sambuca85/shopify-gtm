@@ -1,0 +1,35 @@
+name: Deploy to Shopify
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SHOPIFY_API_KEY: ${{ secrets.SHOPIFY_API_KEY }}
+      SHOPIFY_API_SECRET: ${{ secrets.SHOPIFY_API_SECRET }}
+      SHOPIFY_APP_URL: ${{ secrets.SHOPIFY_APP_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build app
+        run: npm run build
+
+      - name: Deploy to Shopify
+        run: npm run shopify:deploy

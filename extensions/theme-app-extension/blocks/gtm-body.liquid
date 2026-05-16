@@ -1,0 +1,37 @@
+{% comment %}
+  GTM Advanced Tracking - Body Noscript
+  Inserire immediatamente dopo l'apertura del tag <body>
+{% endcomment %}
+
+{% if block.settings.enabled and block.settings.gtm_container_id != blank %}
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{ block.settings.gtm_container_id | escape }}"
+            height="0" 
+            width="0" 
+            style="display:none;visibility:hidden">
+    </iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+{% endif %}
+
+{% schema %}
+{
+  "name": "GTM Body Noscript",
+  "target": "body",
+  "settings": [
+    {
+      "type": "text",
+      "id": "gtm_container_id",
+      "label": "GTM Container ID",
+      "default": ""
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Attiva tracking",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

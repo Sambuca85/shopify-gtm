@@ -1,0 +1,82 @@
+name = "GTM Advanced Tracking"
+client_id = "your_client_id"
+application_url = "https://your-app-url.com"
+embedded = true
+
+[build]
+include_config_on_deploy = true
+
+[access]
+scopes = [
+  "read_products",
+  "read_orders",
+  "read_customers",
+  "write_pixels",
+  "read_pixels",
+  "write_themes",
+  "read_themes",
+  "write_script_tags",
+  "read_script_tags",
+  "write_checkout_ui_extensions",
+  "read_checkout_ui_extensions",
+  "write_marketing_events",
+  "read_marketing_events",
+  "read_analytics",
+  "write_publications",
+  "read_publications"
+]
+
+[access.admin]
+direct_api_mode = "online"
+embedded_app_direct_api_access = true
+
+[auth]
+redirect_urls = [
+  "https://your-app-url.com/auth/callback",
+  "https://your-app-url.com/auth/shopify/callback",
+  "https://your-app-url.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+  [webhooks.privacy_compliance]
+    customer_deletion_url = "https://your-app-url.com/api/webhooks/customer-data-request"
+    customer_data_request_url = "https://your-app-url.com/api/webhooks/customer-data-request"
+    shop_deletion_url = "https://your-app-url.com/api/webhooks/shop-redact"
+
+  [[webhooks.subscriptions]]
+    topics = ["app/uninstalled"]
+    uri = "api/webhooks/app-uninstalled"
+
+  [[webhooks.subscriptions]]
+    topics = ["orders/create", "orders/updated", "orders/paid", "orders/cancelled"]
+    uri = "api/webhooks/orders"
+
+  [[webhooks.subscriptions]]
+    topics = ["products/create", "products/update", "products/delete"]
+    uri = "api/webhooks/products"
+
+  [[webhooks.subscriptions]]
+    topics = ["carts/create", "carts/update"]
+    uri = "api/webhooks/carts"
+
+  [[webhooks.subscriptions]]
+    topics = ["checkouts/create", "checkouts/update", "checkouts/delete"]
+    uri = "api/webhooks/checkouts"
+
+  [[webhooks.subscriptions]]
+    topics = ["customers/create", "customers/update", "customers/delete"]
+    uri = "api/webhooks/customers"
+
+  [[webhooks.subscriptions]]
+    topics = ["shop/update"]
+    uri = "api/webhooks/shop-update"
+
+[app_proxy]
+url = "https://your-app-url.com/proxy"
+subpath = "gtm-tracking"
+prefix = "apps"
+
+[pos]
+embedded = false
