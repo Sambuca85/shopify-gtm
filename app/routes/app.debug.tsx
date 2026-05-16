@@ -15,7 +15,6 @@ import {
   TextField,
   Select,
   Banner,
-  CodeBlock,
   InlineStack,
   Box,
   List,
@@ -203,7 +202,9 @@ export default function DebugPage() {
                   Risultato Test
                 </Text>
                 <Box paddingBlockStart="400">
-                  <CodeBlock>{JSON.stringify(actionData.result, null, 2)}</CodeBlock>
+                  <pre style={{ background: '#f6f6f7', padding: '12px', borderRadius: '8px', overflow: 'auto' }}>
+                    <code>{JSON.stringify(actionData.result, null, 2)}</code>
+                  </pre>
                 </Box>
               </Card>
             </Layout.Section>
@@ -222,9 +223,9 @@ export default function DebugPage() {
                   Payload di Default
                 </Text>
                 <Box paddingBlockStart="400">
-                  <CodeBlock>
-                    {JSON.stringify(generateTestPayload(selectedEvent), null, 2)}
-                  </CodeBlock>
+                  <pre style={{ background: '#f6f6f7', padding: '12px', borderRadius: '8px', overflow: 'auto' }}>
+                    <code>{JSON.stringify(generateTestPayload(selectedEvent), null, 2)}</code>
+                  </pre>
                 </Box>
               </Card>
             </Layout.Section>
